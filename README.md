@@ -27,7 +27,6 @@ int main() {
     printf("CUT SLICE\n");
     Slice *new_sl = slice(sl, 0, 9);
 
-    mem_free(sl);
     for (int i = 0; i < 9; ++i) {
         int *x0 = (int *) get(new_sl, i);
         printf("BEFORE=%d\n", *x0);
@@ -39,7 +38,7 @@ int main() {
     }
 
     mem_free(new_sl);
-
+    mem_free(sl);
 
 
     printf("SLICE OF SLICE TYPE\n");
