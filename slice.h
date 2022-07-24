@@ -1,7 +1,3 @@
-//
-// Created by MacBook Pro on 23.07.2022.
-//
-
 #include <stdlib.h>
 
 #ifndef slice_h

@@ -1,9 +1,6 @@
-//
-// Created by MacBook Pro on 23.07.2022.
-//
 #include <stdlib.h>
 
-const STOP_GROWTH_SIZE = 4096;
+const u_int64_t STOP_GROWTH_SIZE = 4096;
 typedef struct {
     u_int64_t len;
     u_int64_t cap;
@@ -23,7 +20,7 @@ Slice *make(u_int64_t cap, size_t size) {
 
 Slice *append(Slice *src, uintptr_t val) {
     u_int64_t next_len = src->len + 1;
-    u_int64_t len_int_bytes = src->len * src->size;
+    u_int64_t start_byte = src->len * src->size;
     if (next_len > src->cap) {
         u_int64_t next_cap = src->cap * 2;
         if (next_cap == 0) {
@@ -36,12 +33,12 @@ Slice *append(Slice *src, uintptr_t val) {
 
         char *next_ptr = (char *) malloc(next_cap * src->size);
         char *prev_ptr = (char *) src->ptr;
-        for (u_int64_t i = 0; i < len_int_bytes; ++i) {
+        for (u_int64_t i = 0; i < start_byte; ++i) {
             next_ptr[i] = prev_ptr[i];
         }
         char *val_ptr = (char *) val;
-        for (u_int64_t i = len_int_bytes; i < len_int_bytes + (src->size); ++i) {
-            next_ptr[i] = val_ptr[i - len_int_bytes];
+        for (u_int64_t i = start_byte; i < start_byte + (src->size); ++i) {
+            next_ptr[i] = val_ptr[i - start_byte];
         }
         src->cap = next_cap;
         src->len = next_len;
@@ -49,10 +46,11 @@ Slice *append(Slice *src, uintptr_t val) {
         free(prev_ptr);
         return src;
     }
+
     char *ptr = (char *) src->ptr;
     char *val_ptr = (char *) val;
-    for (u_int64_t i = len_int_bytes; i < len_int_bytes + (src->size); ++i) {
-        ptr[i] = val_ptr[i - len_int_bytes];
+    for (u_int64_t i = start_byte; i < start_byte + (src->size); ++i) {
+        ptr[i] = val_ptr[i - start_byte];
     }
     src->len = next_len;
     return src;
