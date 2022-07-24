@@ -11,7 +11,7 @@ int main() {
     printf("INT TYPE\n");
     Slice *sl = make(15, sizeof(int));
     for (int i = 0; i < 15; ++i) {
-        sl = append(sl, (uintptr_t) & i);
+        sl = append(sl, (uintptr_t) &i);
     }
 
     for (int i = 0; i < 15; ++i) {
@@ -19,12 +19,28 @@ int main() {
         printf("BEFORE=%d\n", *x0);
 
         int zi = i + 10;
-        set(sl, i, (uintptr_t) & zi);
+        set(sl, i, (uintptr_t) &zi);
         x0 = (int *) get(sl, i);
         printf("AFTER=%d\n", *x0);
     }
 
+    printf("CUT SLICE\n");
+    Slice *new_sl = slice(sl, 0, 9);
+
     mem_free(sl);
+    for (int i = 0; i < 9; ++i) {
+        int *x0 = (int *) get(new_sl, i);
+        printf("BEFORE=%d\n", *x0);
+
+        int zi = i + 20;
+        set(sl, i, (uintptr_t) &zi);
+        x0 = (int *) get(new_sl, i);
+        printf("AFTER=%d\n", *x0);
+    }
+
+    mem_free(new_sl);
+
+
 
     printf("SLICE OF SLICE TYPE\n");
     Slice *slsl = make(0, sizeof(Slice *));
@@ -32,9 +48,9 @@ int main() {
         Slice *sli = make(0, sizeof(int));
         for (int j = 0; j < 15; ++j) {
             int k = j + i;
-            sli = append(sli, (uintptr_t) & k);
+            sli = append(sli, (uintptr_t) &k);
         }
-        slsl = append(slsl, (uintptr_t) & sli);
+        slsl = append(slsl, (uintptr_t) &sli);
     }
 
     for (int i = 0; i < 15; ++i) {
@@ -46,7 +62,7 @@ int main() {
             printf("BEFORE=%d\n", *x0);
 
             int zi = *x0 + 10;
-            set(sli, j, (uintptr_t) & zi);
+            set(sli, j, (uintptr_t) &zi);
 
             int *x1 = (int *) get(sli, j);
             printf("AFTER=%d\n", *x1);
@@ -89,7 +105,7 @@ int main() {
     Slice *slfl = make(15, sizeof(float));
     for (int i = 0; i < 15; ++i) {
         float ii = i + 10.67f;
-        sl = append(slfl, (uintptr_t) & ii);
+        sl = append(slfl, (uintptr_t) &ii);
     }
 
     for (int i = 0; i < 15; ++i) {
@@ -97,7 +113,7 @@ int main() {
         printf("BEFORE=%f\n", *x0);
 
         float zi = i + 5.5f;
-        set(sl, i, (uintptr_t) & zi);
+        set(sl, i, (uintptr_t) &zi);
         x0 = (float *) get(sl, i);
         printf("AFTER=%f\n", *x0);
     }

@@ -11,6 +11,8 @@ typedef struct {
 
 Slice *make(u_int64_t cap, size_t size);
 
+Slice *slice(Slice *src, u_int64_t from, u_int64_t to);
+
 Slice *append(Slice *src, uintptr_t val);
 
 uintptr_t get(Slice *src, u_int64_t idx);
@@ -19,7 +21,6 @@ uintptr_t set(Slice *src, u_int64_t idx, uintptr_t val);
 
 void mem_free(Slice *src);
 
-void print(Slice *src);
 
 #endif //slice_h
 

@@ -78,6 +78,29 @@ uintptr_t set(Slice *src, u_int64_t idx, uintptr_t val) {
     return 1;
 }
 
+Slice *slice(Slice *src, u_int64_t from, u_int64_t to) {
+    if (to >= src->len || from >= to || from >= src->len) {
+        return (Slice *) NULL;
+    }
+
+    u_int64_t start_byte = (from * src->size);
+    u_int64_t end_byte = (to * src->size);
+
+    Slice *new = malloc(sizeof(Slice));
+    new->len = (to - from) + 1;
+    new->ptr = (uintptr_t) malloc(new->len * src->size);;
+    new->cap = new->len;
+    new->size = src->size;
+
+    char *old_ptr = (char *) src->ptr;
+    char *new_ptr = (char *) new->ptr;
+    for (u_int64_t i = start_byte; i < end_byte; ++i) {
+        new_ptr[i - start_byte] = old_ptr[i];
+    }
+
+    return new;
+}
+
 void mem_free(Slice *src) {
     free((void *) src->ptr);
     free(src);
