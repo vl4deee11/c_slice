@@ -101,6 +101,19 @@ Slice *slice(Slice *src, u_int64_t from, u_int64_t to) {
     return new;
 }
 
+void copy(Slice *from, Slice *to) {
+    if (to->cap < from->len) {
+        return;
+    }
+
+    char *to_ptr = (char *) to->ptr;
+    char *from_ptr = (char *) from->ptr;
+    for (u_int64_t i = 0; i < from->len * from->size; ++i) {
+        to_ptr[i] = from_ptr[i];
+    }
+    to->len = from->len;
+}
+
 void mem_free(Slice *src) {
     free((void *) src->ptr);
     free(src);

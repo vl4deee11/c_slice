@@ -21,6 +21,8 @@ uintptr_t set(Slice *src, u_int64_t idx, uintptr_t val);
 
 void mem_free(Slice *src);
 
+void copy(Slice *from, Slice *to);
+
 
 #endif //slice_h
 
